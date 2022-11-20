@@ -18,11 +18,14 @@ setupToggle('showControls', 'Show Controls', false);
 setupToggle('hideMenu', 'Hide Menu', false);
 setupToggle('enableAudio', 'Enable Audio', true);
 
+/*
 setupSelect(
     'displayType',
     'Display Type',
     { webgl2: 'WebGL2', old: 'Canvas + SVG' },
     'webgl2');
+*/
+load('displayType','webgl2');
 
 setupToggle('snapPixels', 'Snap Pixels', true);
 setupToggle('virtualKeyboard', 'Virtual Keyboard', true);

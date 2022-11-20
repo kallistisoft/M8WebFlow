@@ -124,11 +124,12 @@ function connectionChanged(isConnected) {
     if (isConnected) {
         hide('#buttons, .error, #info');
         Audio.start(10);
-
+        window._TTS.speak('Dirty Wave M8 device ... connected...', 'device');
     } else {
         renderer.clear();
         show('#buttons');
         Audio.stop();
+        window._TTS.speak('Dirty Wave M8 device ... disconnected...', 'device');
     }
 
     Wake.connectionChanged(isConnected);
@@ -167,3 +168,5 @@ function setupConnection(connection, errorMessage) {
 on('#info button', 'click', () => hide('#info'));
 
 setupWorker();
+
+// window.speechSynthesis.speak( new SpeechSynthesisUtterance('M8 Webflow Text to speech application started...') );
