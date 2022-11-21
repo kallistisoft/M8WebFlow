@@ -1,4 +1,5 @@
 // Copyright 2021-2022 James Deery
+// Copyright 2022 Kallistisoft
 // Released under the MIT licence, https://opensource.org/licenses/MIT
 
 import { UsbConnection } from './usb.js';

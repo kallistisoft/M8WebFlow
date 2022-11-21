@@ -1,4 +1,5 @@
 // Copyright 2021 James Deery
+// Copyright 2022 Kallistisoft
 // Released under the MIT licence, https://opensource.org/licenses/MIT
 
 import * as Shaders from '../build/shaders.js';
@@ -186,9 +187,11 @@ export class Renderer {
         if( this._textFromCoord(2, 0, 5) === 'THEME' )
             return 'THEME SETTINGS ... WARNING CHANGING THE FONT ... CURSOR COLOR ... OR SELECTION COLOR MAY BREAK TEXT TO SPEECH FUNCTIONALITY ... TEXT TO SPEECH IS DISABLED FOR THIS PAGE';
 
-        if( this._textFromCoord(2,0,6) === 'RENDER' ) {
+        if( this._textFromCoord(2,0,6) === 'RENDER' )
             return 'RENDER AUDIO';
-        }
+
+        if( this._textFromCoord(2,0,6) === 'SAMPLE' )
+            return 'SAMPLE EDIT RECORD';
 
         // Overwrite warning pages
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1011,6 +1014,51 @@ export class Renderer {
             }
             return `${val} ... ${label}`;
         }
+
+        // SAMPLE EDIT RECORD
+        //----------------------------------------------------------------------------------------
+        if( this._currentPage == 'SAMPLE EDIT RECORD' ) {
+            let label = 'error';
+            switch( coord.row ) {
+                case 4: label = 'record'; 
+                    switch( coord.col ) {
+                        case 8: break;
+                        case 14: label += ' source'; break;
+                        case 18: label += ' volume'; break;
+                        case 22: label += ' trigger volume'; break;
+                        case 26: label += ' from song position'; break;
+                    }
+                    break;
+
+                case 13: label = 'selection ' + (( coord.col == 13 ) ? 'start' : 'end');
+                    if( val.replace(/0/g,'') === '' ) { val = 0; } else { val = val.replace(/^0+/,'').split('').join(' '); }
+                    break;
+
+                case 15: label = 'loop region ' + (( coord.col == 13 ) ? 'start' : 'end');
+                    if( val.replace(/0/g,'') === '' ) { val = 0; } else { val = val.replace(/^0+/,'').split('').join(' '); }
+                    break;
+                
+                case 16: label = 'slice marker';
+                    if( coord.col != 13 ) {
+                        if( val.replace(/0/g,'') === '' ) { val = 0; } else { val = val.replace(/^0+/,'').split('').join(' '); }
+                        let num = this._textFromCoord( coord.row, 13, 2 );
+                        return `${val} ... slice marker ${num}`;
+                    } break;
+
+                case 18: label = 'process sample'; break;
+
+                case 20: label = 'name'; 
+                    val = this._textFromCoord( coord.row, 14, 18 );
+                    let char = this._textFromSelection();
+                    if( char != '-') char = this._expandPunctuation( char);
+                    char = char == '-' ? 'empty' : `letter ${char}`
+                    return `name ${val} ${char} ... position ${coord.col - 13}`;
+                    break;
+
+                case 21: label = ''; break;
+            }
+            return `${val} ... ${label}`;
+        }        
     }
 
     _rectShader;

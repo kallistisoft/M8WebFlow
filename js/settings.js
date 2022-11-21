@@ -1,4 +1,5 @@
 // Copyright 2021-2022 James Deery
+// Copyright 2022 James Deery
 // Released under the MIT licence, https://opensource.org/licenses/MIT
 
 import { show, hide, toggle, appendButton, on } from './util.js';
