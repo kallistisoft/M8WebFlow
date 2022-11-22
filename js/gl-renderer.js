@@ -10,6 +10,9 @@ const MAX_RECTS = 1024;
 const ARRAY_WIDTH = 33;
 const ARRAY_HEIGHT = 23;
 
+
+
+
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // TTS Class :: simple wrapper class for the native speech synthesis API
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  */
@@ -140,6 +143,30 @@ export class Renderer {
     }
 
     /* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // string formatHex( val ) :: format hex numbers for tts output
+       -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  */
+    _formatHex( val ) {
+        if( ! val || val === '' ) return '';
+
+        // return: original value if non-hexadecimal
+        if( ! val.match(/^[0-9A-F]+$/) ) return val;
+
+        // return: 0 if all zeros
+        if( val.replace(/0/g,'') === '' ) return '0';
+
+        // return: spaced digits if val >= A0 <= FF
+        if( val.length == 2 && val[0].match(/[A-F]/) )
+            return val.split('').join(' ');
+        
+        // return: strip leading zeros and space long hex digits
+        if( val.length > 2 && val.match(/[A-F]/) )
+            return val.replace(/^0+/,'').split('').join(' ');
+
+        // return: original value if val < A0 or all numeric
+        return val;
+    }
+
+    /* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // string _pageFromArray() -- return text of page type
        -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  */
     _pageFromArray() {
@@ -218,6 +245,9 @@ export class Renderer {
 
         if( this._textFromCoord(7, 2, 16) === 'CREATE DIRECTORY' )
             return 'CREATE DIRECTORY OF SONG AND SAMPLES? A PRE-EXISTING BUNDLE WILL BE OVERWRITTEN';
+
+        if( this._textFromCoord(9, 2, 19) === 'EXIT WITHOUT SAVING' )
+            return 'EXIT WITHOUT SAVING CHANGES?';
 
         // Load/Save dialog pages
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -351,7 +381,8 @@ export class Renderer {
             this._currentPage == 'OVERWRITE EXISTING INSTRUMENT?' ||
             this._currentPage == 'CLEAR UNUSED PHRASES AND CHAINS AND REMOVE DUPLICATES?' ||
             this._currentPage == 'CLEAR UNUSED INTRUMENTS AND TABLES AND REMOVE DUPLICATES?' ||
-            this._currentPage == 'CREATE DIRECTORY OF SONG AND SAMPLES? A PRE-EXISTING BUNDLE WILL BE OVERWRITTEN'
+            this._currentPage == 'CREATE DIRECTORY OF SONG AND SAMPLES? A PRE-EXISTING BUNDLE WILL BE OVERWRITTEN' ||
+            this._currentPage == 'EXIT WITHOUT SAVING CHANGES?'
         ) return `${val}`;
 
         if( 
@@ -384,13 +415,19 @@ export class Renderer {
             return `${val}`;
         }
 
+
+        // FORMAT HEX VALUES FOR TTS OUTPUT
+        // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+        val = this._formatHex( val );
+
+
         // SONG/LIVE PAGE
         //----------------------------------------------------------------------------------------
         if( this._currentPage == 'SONG' || this._currentPage == 'LIVE' ) {
             let row = this._textFromCoord( coord.row, 0, 2);    
             let col = Math.floor( (coord.col - 3) / 3) + 1;
             if( val === '--') val = 'empty';
-
+            
             return `${val} ... row ${row} track ${col}`;
         }
 
@@ -1031,16 +1068,13 @@ export class Renderer {
                     break;
 
                 case 13: label = 'selection ' + (( coord.col == 13 ) ? 'start' : 'end');
-                    if( val.replace(/0/g,'') === '' ) { val = 0; } else { val = val.replace(/^0+/,'').split('').join(' '); }
                     break;
 
                 case 15: label = 'loop region ' + (( coord.col == 13 ) ? 'start' : 'end');
-                    if( val.replace(/0/g,'') === '' ) { val = 0; } else { val = val.replace(/^0+/,'').split('').join(' '); }
                     break;
                 
                 case 16: label = 'slice marker';
                     if( coord.col != 13 ) {
-                        if( val.replace(/0/g,'') === '' ) { val = 0; } else { val = val.replace(/^0+/,'').split('').join(' '); }
                         let num = this._textFromCoord( coord.row, 13, 2 );
                         return `${val} ... slice marker ${num}`;
                     } break;
