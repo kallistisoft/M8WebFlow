@@ -154,10 +154,12 @@ export class Renderer {
         // return: 0 if all zeros
         if( val.replace(/0/g,'') === '' ) return '0';
 
-        // return: spaced digits if val >= A0 <= FF
-        if( val.length == 2 && val[0].match(/[A-F]/) )
-            return val.split('').join(' ');
-        
+        // return: 2-digit hex values - spaced digits if val >= A0 <= FF
+        if( val.length == 2 ) {
+            if( val[0].match(/[A-F]/) ) return val.split('').join(' ');
+            if( val[0] === '0' ) return val[1];
+        }
+
         // return: strip leading zeros and space long hex digits
         if( val.length > 2 && val.match(/[A-F]/) )
             return val.replace(/^0+/,'').split('').join(' ');
