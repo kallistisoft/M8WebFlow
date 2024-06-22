@@ -1,7 +1,7 @@
 {
-  "name": "M8 Display",
-  "short_name": "M8 Display",
-  "description": "Web display for M8 Headless",
+  "name": "M8 WebFlow",
+  "short_name": "M8 WebFlow",
+  "description": "Web Display with TTS for M8 Headless",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#000",
