@@ -1,13 +1,14 @@
 # M8 Headless Web Display
 
-This is alternative frontend for [M8 Headless](https://github.com/DirtyWave/M8HeadlessFirmware).
+This is alternative frontend for [M8 Headless](https://github.com/DirtyWave/M8HeadlessFirmware) that provides full Text-to-Speech support!
 
 It runs entirely in the browser and only needs to be hosted on a server to satisfy browser security policies. No network communication is involved.
 
-Try it out at https://derkyjadex.github.io/M8WebDisplay/.
+Try it out at https://m8flow.kallistisoft.com
 
 Features:
 
+- In browser TTS coverage of all M8 functions (Google Chrome and Edge)
 - Render the M8 display
 - Route M8's audio out to the default audio output
 - Keyboard and gamepad input
@@ -17,19 +18,70 @@ Features:
 - Full offline support
 - Installable as a [PWA](https://en.wikipedia.org/wiki/Progressive_web_application)
 
+## Firmware Support
+This application has been tested using version 3.0.4 of M8 Headless Firmware.
+Given the way it communicates the M8 it *should* be compatible with later versions of the firmware and automatically support new features, but this hasn't been tested.
+
 ## Supported Platforms
 
 The following should generally work, details are below.
 
 - Chrome 89+ on macOS, Windows and Linux\*
 - Edge 89+ on macOS and Windows
-- Chrome on Android, without audio\*\*
 
-The web display uses the Web Serial API to communicate with the M8. This API is currently only supported by desktop versions of Google Chrome and Microsoft Edge in versions 89 or later. For Chrome on Android the code can fallback to using the WebUSB API.
+The web display uses the Web Serial API to communicate with the M8. This API is currently only supported by desktop versions of Google Chrome and Microsoft Edge in versions 89 or later. 
 
 \*On Ubuntu and Debian systems (and perhaps others) users do not have permission to access the M8's serial port by default. You will need to add yourself to the `dialout` group and restart your login session/reboot. After this you should be able to connect normally.
 
-\*\*The way that that Android handles USB audio devices (such as the M8) prevents us from being able to redirect the audio to the phone's speakers or headphone output. When the M8 is attached, Android appears to completely disable the internal audio interface and uses the M8 for all audio input and output instead. So the page is able to receive the audio from the M8 but it does not have anywhere to redirect it to other than the M8 itself.
+
+# Keyboard Control Scheme
+This application uses the default keyboard control scheme of `M8Headless. The following is a very short list of core commands. For the full list of functions and actions please download the [The M8 User Manual](https://cdn.shopify.com/s/files/1/0455/0485/6229/files/m8_operation_manual_v20230630.pdf?v=1688149581) which is available on the [Resources & Downloads] page of the Dirtywave website.
+
+- **Arrow keys** for **navigation** and **data entry**
+- **Shift and Arrow** for **interface page selection**
+- **Space** for **start and stop**
+- Letter **Z** for **Option**
+- Letter **X** for **Edit**
+
+## Navigating the Song Page
+On the Song page holding down the **Option** key (**Z**) while pressing **Up** or **Down** will navigate a full page (16 rows) of the song matrix.
+
+## Editing Values
+To edit a value hold the edit key (**X**) and use the arrow keys to change the value:
+
+- **Up** and **Down** change the value by **10**
+- **Left** and **Right** change the value by **1**
+
+To **Delete** a value press **Option and Edit**; keys (**Z and X**)
+
+## Copy and Paste
+To create a selection hold **Shift** and press the **Option** key (**Z**) this will begin **copy selection** mode and select the current cell. 
+
+Repeatedly pressing **Shift Option** will change the selection mode:
+- Current cell
+- Current column
+- Current row
+- Entire page
+
+Once a selection mode has been selected release the **Shift** key and alter the selection area using the **Arrow Keys**
+
+After the desired selection area has been set the following actions can be taken:
+
+- **Cut** selection by pressing **Option and Edit** keys (**Z and X**)
+- **Copy** selection by pressing **Option** key (**Z**)
+
+The buffered selection can then be pasted by pressing **Shift and Edit** key (**X**)
+
+
+
+
+## Keyboard Note Input
+The top two rows of the keyboard are used as a live musical keyboard, using the QWERTY layout the **A** key is the note **C-4** and the **quote** key is **F-5** with sharps residing on the top row; the letter **W** is **C sharp 4*
+
+This musical keyboard can be used to audition instruments and to enter values into a pattern. Both the octave of the keyboard and the default velocity of entered notes can be changed.
+
+- **Minus** and **Equal** change the octave of the keyboard
+- **Bracket Left** and **Right** change the default note velocity
 
 ## Developing
 
@@ -61,8 +113,14 @@ make deploy
 
 This will build and copy the release files to the `deploy/` directory. These files can be hosted on any static web server as long as has an HTTPS address.
 
+## Known Bugs
+* Unnamed instruments are being read out as 'dash dash dash etc'
+
 ## TODO/Ideas
 
+- Provide feed back for the copy selection mode (cell,column,row,all)
+- Add integrated application user's guide
+- Expose controls for TTS speed and voice
 - Avoid/automatically recover from bad frames
 - Auto-reboot for firmware loader/real M8 support
 - Selectable audio output device
