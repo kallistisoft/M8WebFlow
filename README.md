@@ -19,10 +19,9 @@ Features:
 - Installable as a [PWA](https://en.wikipedia.org/wiki/Progressive_web_application)
 
 ## Firmware Support
-This application has been tested using version 3.0.4 of M8 Headless Firmware.
-Given the way it communicates the M8 it is automatically compatible with firmware updates that do not alter the layout and location of onscreen data, but no testing has been done past 3.0.4.
+This application is sensitive to the version of the M8 firmware and currently only works with version 2.7.8 of M8 Headless Firmware. Support for later versions will be added soon.
 
-The 3.0.4 firmware can be [downloaded here](https://raw.githubusercontent.com/Dirtywave/M8HeadlessFirmware/main/Releases/M8_V3_0_4_HEADLESS.hex), use your browsers 'save as' feature to save firmware file.
+The 2.7.8 firmware can be [downloaded here](https://raw.githubusercontent.com/Dirtywave/M8HeadlessFirmware/main/Releases/M8_V2_7_8_HEADLESS.hex), use your browsers 'save as' feature to save firmware file.
 
 
 ## Supported Platforms
