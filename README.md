@@ -20,7 +20,10 @@ Features:
 
 ## Firmware Support
 This application has been tested using version 3.0.4 of M8 Headless Firmware.
-Given the way it communicates the M8 it *should* be compatible with later versions of the firmware and automatically support new features, but this hasn't been tested.
+Given the way it communicates the M8 it is automatically compatible with firmware updates that do not alter the layout and location of onscreen data, but no testing has been done past 3.0.4.
+
+The 3.0.4 firmware can be [downloaded here](https://raw.githubusercontent.com/Dirtywave/M8HeadlessFirmware/main/Releases/M8_V3_0_4_HEADLESS.hex), use your browsers 'save as' feature to save firmware file.
+
 
 ## Supported Platforms
 

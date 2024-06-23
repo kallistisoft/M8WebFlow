@@ -3,3 +3,4 @@ build/
 cert/
 deploy
 
+deploy.tar.gz
